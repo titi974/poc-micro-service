@@ -1,0 +1,84 @@
+version: '3.8'
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    hostname: rabbitmq
+    volumes:
+      - /var/lib/rabbitmq
+      - ./rabbitmq/definitions.json:/etc/rabbitmq/definitions.json
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    env_file:
+      - ./rabbitmq/rabbitmq.env
+    networks:
+      - rabbit
+  discount:
+    build:
+      context: discount
+    container_name: discount-api
+    environment:
+      - RABBIT_USER=${RABBIT_USER}
+      - RABBIT_PWD=${RABBIT_PWD}
+      - RABBIT_HOST=${RABBIT_HOST}
+      - RABBIT_URL=${RABBIT_URL}
+      - API_OFFER=${API_OFFER}
+    ports:
+      - ${API_PORT_DISCOUNT}:3001
+    networks:
+      - discount
+      - rabbit
+      - offer
+  offer:
+    build:
+      context: offer
+    container_name: offer-api
+    environment:
+      - RABBIT_USER=${RABBIT_USER}
+      - RABBIT_PWD=${RABBIT_PWD}
+      - RABBIT_HOST=${RABBIT_HOST}
+      - RABBIT_URL=${RABBIT_URL}
+    ports:
+      - ${API_PORT_OFFER}:3002
+    networks:
+      - offer
+      - rabbit
+  quota:
+    build:
+      context: quota
+    container_name: quota-api
+    environment:
+      - RABBIT_USER=${RABBIT_USER}
+      - RABBIT_PWD=${RABBIT_PWD}
+      - RABBIT_HOST=${RABBIT_HOST}
+      - RABBIT_URL=${RABBIT_URL}
+    ports:
+      - ${API_PORT_QUOTA}:3003
+    networks:
+      - quota
+      - rabbit
+  transac:
+    build:
+      context: transac
+    container_name: transac-api
+    environment:
+      - RABBIT_USER=${RABBIT_USER}
+      - RABBIT_PWD=${RABBIT_PWD}
+      - RABBIT_HOST=${RABBIT_HOST}
+      - RABBIT_URL=${RABBIT_URL}
+      - API_OFFER=${API_OFFER}
+      - API_DISCOUNT=${API_DISCOUNT}
+    ports:
+      - ${API_PORT_TRANSAC}:3004
+    networks:
+      - transac
+      - rabbit
+      - offer
+      - discount
+networks:
+  rabbit:
+  offer:
+  discount:
+  quota:
+  transac:
