@@ -1,16 +1,12 @@
-import {Controller} from '@nestjs/common';
+import {Controller, Inject} from '@nestjs/common';
 import {Ctx, MessagePattern, Payload, RmqContext} from "@nestjs/microservices";
-import SynchroManager from "../../application/SynchroManager";
-import {DiscountMemoryService} from "../memory/discount-memory.service";
+import DiscountHandler from "../../application/DiscountHandler";
 import Offer from "../../domain/Offer";
 
 @Controller('rabbit-mq')
 export class RabbitMqController {
 
-    private readonly syncOffer: SynchroManager
-
-    constructor(private memory: DiscountMemoryService) {
-        this.syncOffer = new SynchroManager(memory);
+    constructor(@Inject('DISCOUNT_HANDLER') private discountHandler: DiscountHandler) {
     }
 
     @MessagePattern('create_offer')
@@ -19,7 +15,7 @@ export class RabbitMqController {
         const orginalMessage = context.getMessage();
         console.log('discount recu', data)
         try {
-            this.syncOffer.createOffer(new Offer(data.reference, data.price, data.unit, data.discount))
+            this.discountHandler.createOffer(new Offer(data.reference, data.price, data.unit, data.discount))
             channel.ack(orginalMessage)
         }catch (e){
             console.log(e)
@@ -32,7 +28,7 @@ export class RabbitMqController {
         const orginalMessage = context.getMessage();
         console.log('discount recu', data)
         try {
-            this.syncOffer.updateOffer(new Offer(data.reference, data.price, data.unit, data.discount))
+            this.discountHandler.updateOffer(new Offer(data.reference, data.price, data.unit, data.discount))
             channel.ack(orginalMessage)
         }catch (e){
             console.log(e)

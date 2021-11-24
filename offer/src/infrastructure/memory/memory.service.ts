@@ -4,14 +4,12 @@ import Offer from "../../domain/Offer";
 import Quota from "../../domain/Quota";
 
 @Injectable()
-export class MemoryService implements OfferRepository {
+export class MemoryService implements OfferRepository{
+
     private readonly memories: Offer[] = []
 
     save(offer: Offer): void {
-        if(this.findByReference(offer.reference))
-            this.update(offer)
-
-        this.memories.push(offer)
+        this.findByReference(offer.reference) ? this.update(offer) : this.memories.push(offer)
     }
 
     update(offer: Offer): void {
@@ -36,7 +34,7 @@ export class MemoryService implements OfferRepository {
         return offer
     }
 
-    delete() {
+    deleteAll(): void {
         this.memories.length = 0
     }
 }

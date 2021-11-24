@@ -4,4 +4,6 @@ export default interface QuotaRepository {
     addToUpdate(quota: Quota): void
 
     getAllQuota(): Quota[]
+
+    deleteAll(): void
 }

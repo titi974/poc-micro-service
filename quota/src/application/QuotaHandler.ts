@@ -1,7 +1,7 @@
 import QuotaRepository from "../domain/QuotaRepository";
 import Quota from "../domain/Quota";
 
-export default class SyncManager {
+export default class QuotaHandler {
     constructor(private readonly memory: QuotaRepository) {
     }
 

@@ -31,4 +31,7 @@ export default class OfferManager {
         await this.eventBus.publish(eventsDomain)
     }
 
+    deleteAll() {
+        this.memory.deleteAll()
+    }
 }

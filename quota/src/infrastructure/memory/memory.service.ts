@@ -22,7 +22,7 @@ export class MemoryService implements QuotaRepository {
         return this.memories;
     }
 
-    delete() {
+    deleteAll() {
         this.memories.length = 0
     }
 }

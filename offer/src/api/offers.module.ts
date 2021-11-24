@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common';
 import { OffersController } from './offers.controller';
 import { OffersService } from './offers.service';
-import {RabbitMqModule} from "../infrastructure/rabbit-mq/rabbit-mq.module";
-import {MemoryModule} from "../infrastructure/memory/memory.module";
+import {CoreModule} from "../config/core.module";
 
 @Module({
-  imports: [RabbitMqModule, MemoryModule],
+  imports: [CoreModule],
   controllers: [OffersController],
   providers: [OffersService]
 })

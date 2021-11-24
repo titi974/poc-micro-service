@@ -7,4 +7,5 @@ export default interface OfferRepository {
     findAll(): Offer[]
     findByReference(reference: string): Offer
     updateQuota(reference:string, quota: Quota): Offer;
+    deleteAll(): void;
 }

@@ -3,47 +3,46 @@ import OfferRequest from "./message/OfferRequest";
 import {OffersService} from "./offers.service";
 import OfferQuotasRequest from "./message/OfferQuotasRequest";
 import Offer from "../domain/Offer";
-import {MemoryService} from "../infrastructure/memory/memory.service"
-
 
 @Controller('offers')
 export class OffersController {
-    constructor(private readonly offerService: OffersService, private readonly memory: MemoryService) {
+
+    constructor(private readonly offerService: OffersService) {
     }
 
     @Get('/:reference')
-    getOffer(@Param('reference') reference: string): Offer[] {
+    async getOffer(@Param('reference') reference: string): Promise<Offer[]> {
         console.log('Get Offer ',reference)
         return this.offerService.getOfferByReference(reference)
     }
 
     @Get('/discounts/:reference')
-    getOfferByDiscount(@Param('reference') reference: string): Offer[] {
+    async getOfferByDiscount(@Param('reference') reference: string): Promise<Offer[]> {
         return this.offerService.getOfferByDiscountReference(reference)
     }
 
     @Get()
-    getOffers(): Offer[] {
-        return this.memory.findAll()
+    async getOffers(): Promise<Offer[]> {
+        return this.offerService.getOffers()
     }
 
     @Post()
-    async createOffer(@Body() offerRequest: OfferRequest) {
+    async createOffer(@Body() offerRequest: OfferRequest): Promise<void> {
         await this.offerService.createOffer(offerRequest)
     }
 
     @Put("/quotas")
-    changeQuotasOffer(@Body() offerQuotasRequest: OfferQuotasRequest) {
-        this.offerService.updateQuotasOffer(offerQuotasRequest)
+    async changeQuotasOffer(@Body() offerQuotasRequest: OfferQuotasRequest): Promise<void> {
+        await this.offerService.updateQuotasOffer(offerQuotasRequest)
     }
 
     @Put()
-    updateOffer(@Body() offerRequest: OfferRequest) {
-        this.offerService.updateOffer(offerRequest)
+    async updateOffer(@Body() offerRequest: OfferRequest): Promise<void> {
+        await this.offerService.updateOffer(offerRequest)
     }
 
     @Delete()
-    reset() {
-        this.memory.delete()
+    async reset(): Promise<void> {
+        await this.offerService.delete()
     }
 }

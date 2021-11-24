@@ -1,18 +1,18 @@
-import {Controller, Delete, Get} from '@nestjs/common';
+import {Controller, Delete, Get, Inject} from '@nestjs/common';
 import Quota from "../domain/Quota";
-import {MemoryService} from "../infrastructure/memory/memory.service";
+import {QuotaFetcher} from "../application/QuotaFetcher";
 
 @Controller('quotas')
 export class QuotaController {
 
-    constructor(private readonly memory: MemoryService) {
+    constructor(@Inject('QUOTA_FETCHER') private readonly fetcher: QuotaFetcher) {
     }
     @Get()
     getAll(): Quota[] {
-        return this.memory.getAllQuota()
+        return this.fetcher.getAllQuota()
     }
     @Delete()
     delete() {
-        return this.memory.delete()
+        return this.fetcher.deleteAll()
     }
 }

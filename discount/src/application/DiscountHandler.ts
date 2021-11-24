@@ -1,7 +1,7 @@
 import Offer from "../domain/Offer";
 import DiscountRepository from "../domain/DiscountRepository";
 
-export default class SynchroManager {
+export default class DiscountHandler {
     constructor(private readonly discountRepository: DiscountRepository) {
     }
 
