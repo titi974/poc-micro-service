@@ -19,20 +19,20 @@ export class OffersService {
     }
 
     public async createOffer(offerRequest: OfferRequest): Promise<void> {
-        const offer = new Offer(offerRequest.reference, offerRequest.price, offerRequest.unit, offerRequest.discount);
+        let quota
         if (offerRequest.quota) {
-            const quota = new Quota(offerRequest.quota.reference, offerRequest.quota.valeur);
-            offer.addQuota(quota)
+            quota = new Quota(offerRequest.quota.reference, offerRequest.quota.valeur);
         }
+        const offer = new Offer(offerRequest.reference, offerRequest.price, offerRequest.unit, offerRequest.discount, quota);
         await this.offerManager.create(offer);
     }
 
     public async updateOffer(offerRequest: OfferRequest) {
-        const offer = new Offer(offerRequest.reference, offerRequest.price, offerRequest.unit, offerRequest.discount);
+        let quota
         if (offerRequest.quota) {
-            const quota = new Quota(offerRequest.quota.reference, offerRequest.quota.valeur);
-            offer.addQuota(quota)
+            quota = new Quota(offerRequest.quota.reference, offerRequest.quota.valeur);
         }
+        const offer = new Offer(offerRequest.reference, offerRequest.price, offerRequest.unit, offerRequest.discount, quota);
         await this.offerManager.update(offer);
     }
 

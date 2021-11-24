@@ -14,10 +14,10 @@ export default class OfferManager {
     public async create(offer: Offer): Promise<void> {
         this.memory.save(offer)
         const eventsDomain: DomainEvent[] = []
+        eventsDomain.push(new OfferCreatedEvent(offer.reference, offer.price, offer.unit, offer.discount, offer.quota))
         if (offer.quota) {
             eventsDomain.push(new QuotaCreatedEvent(offer.quota.reference, offer.quota.quantite));
         }
-        eventsDomain.push(new OfferCreatedEvent(offer.reference, offer.price, offer.unit, offer.discount, offer.quota))
         await this.eventBus.publish(eventsDomain)
     }
 

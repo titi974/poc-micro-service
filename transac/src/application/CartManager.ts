@@ -15,10 +15,12 @@ export class CartManager {
     }
 
     async create(cartRequest: CreateCartRequest): Promise<void> {
-        const offer: Offer = await this.offerRepository.getOffer(cartRequest.lineItem.offerReference);
-        const discount: Discount = await this.discountRepository.getDiscountByOfferReference(cartRequest.lineItem.offerReference);
-        const lineItem = new LineItem(offer, discount, cartRequest.lineItem.quantite);
-        this.transacRepository.save(new Cart('1', [lineItem]))
-        this.eventBus.publish(new QuotaEvent(offer.quota.reference, lineItem.quantite))
+        const offer: Offer | null = await this.offerRepository.getOffer(cartRequest.lineItem.offerReference);
+        if (offer) {
+            const discount: Discount = await this.discountRepository.getDiscountByOfferReference(cartRequest.lineItem.offerReference);
+            const lineItem = new LineItem(offer, discount, cartRequest.lineItem.quantite);
+            this.transacRepository.save(new Cart('1', [lineItem]))
+            this.eventBus.publish(new QuotaEvent(offer.quota.reference, lineItem.quantite))
+        }
     }
 }

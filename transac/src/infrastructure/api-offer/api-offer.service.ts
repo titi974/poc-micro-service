@@ -8,8 +8,8 @@ export class ApiOfferService implements OfferGateway {
     constructor(@Inject('API_OFFER') private readonly urlOffer: string, private readonly httpService: HttpService) {
     }
 
-    async getOffer(reference: string): Promise<Offer> {
+    async getOffer(reference: string): Promise<Offer | null> {
         const {data} = await this.httpService.get(`${this.urlOffer}/offers/${reference}`).toPromise();
-        return new Offer(data[0].reference, data[0].price, data[0].unit, new Quota(data[0].quota.reference))
+        return data.length === 0 ? null : new Offer(data[0].reference, data[0].price, data[0].unit, new Quota(data[0].quota.reference))
     }
 }
