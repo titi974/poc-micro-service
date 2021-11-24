@@ -1,1 +1,1 @@
-Créer un .env appartir du fichier .env.exemple
+Petit POC sur les mircos services avec Rabbit MQ et NestJs
